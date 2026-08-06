@@ -79,6 +79,6 @@ be released as a minor version bump and described in the release notes.
 ## Support
 
 Issued application ids, signing keys, and questions about a monitored
-application: [willpickeral@williambelle.co](mailto:willpickeral@williambelle.co).
+application: [support@williambelle.co](mailto:support@williambelle.co).
 
 Licensed MIT — read it, audit it, and verify it does what this page says.

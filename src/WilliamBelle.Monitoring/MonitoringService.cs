@@ -71,7 +71,10 @@ public sealed class MonitoringService(
                 Name = n.Name!,
                 Version = n.Version?.ToString() ?? "unknown",
             })
-            .OrderBy(p => p.Name)
+            // Ordinal, not the default culture-sensitive comparer: snapshots
+            // are compared across time and machines to spot drift, so the
+            // order must not depend on the host's locale.
+            .OrderBy(p => p.Name, StringComparer.Ordinal)
             .ToList(),
     };
 }

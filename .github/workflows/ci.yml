@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      - run: dotnet build -c Release
+
+      - run: dotnet test -c Release --no-build
+
+      # Packing on every change catches metadata and documentation problems at
+      # the commit that caused them rather than at release.
+      - run: dotnet pack src/WilliamBelle.Monitoring -c Release --no-build -o artifacts

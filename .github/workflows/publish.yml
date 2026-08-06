@@ -1,0 +1,58 @@
+name: Publish
+
+# Releasing is deliberate: a published NuGet version can never be replaced or
+# deleted, only unlisted. Tagging v0.2.0 publishes 0.2.0 — the tag carries the
+# version, so there is no project file to forget to bump.
+#
+#   git tag v0.2.0 && git push origin v0.2.0
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  # Required for Trusted Publishing: the workflow proves its identity to
+  # nuget.org with a short-lived OIDC token instead of a long-lived API key,
+  # so no publishing secret exists in this repository at all.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Source Link needs history to map commits
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      # The signature scheme is this package's security boundary; a release
+      # that changed it would break every installation at once.
+      - name: Test
+        run: dotnet test -c Release
+
+      - name: Pack ${{ github.ref_name }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          dotnet pack src/WilliamBelle.Monitoring -c Release \
+            -p:Version="$version" -o artifacts
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: artifacts/*
+
+      - name: Authenticate to NuGet
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: WilliamBelle
+
+      - name: Push
+        run: |
+          dotnet nuget push artifacts/*.nupkg \
+            --source https://api.nuget.org/v3/index.json \
+            --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" \
+            --skip-duplicate

@@ -38,31 +38,33 @@ It signs that with HMAC-SHA256 and POSTs it. That is the complete data surface.
 - **It collects no logs, no request payloads, and no user data.**
 - **It cannot break the host.** Every reporting cycle is wrapped in
   catch-log-continue; an unreachable ingest endpoint costs the host nothing.
-- **It has no William Belle dependencies.** It ships into other people's
-  applications, so it must be the smallest possible supply-chain surface. The
-  HMAC signer is duplicated from the portal rather than shared, and a
-  round-trip test in `WilliamBelle.Portal.Tests` pins the two implementations
-  to each other — change one and the build fails until both match.
+- **It carries no proprietary dependencies.** It ships into other people's
+  applications, so it is kept to the smallest possible supply-chain surface:
+  two Microsoft.Extensions abstractions and nothing else.
 
-Keeping those properties true is the point of this package. Anything that would
-give it an inbound channel or a dependency needs a very good reason.
+Keeping those properties true is the point of this package.
 
-## Publishing
+## Releasing
 
-Packed from this project (`dotnet pack -c Release`). Pre-1.0 on purpose — the
-ingest contract may still change.
+Publishing is tag-triggered (`azure-pipelines.monitoring.yml`). Tagging
+`monitoring-v0.2.0` builds, tests, packs, and pushes version 0.2.0:
 
-Before the first publish: **reserve the `WilliamBelle.*` ID prefix on
-nuget.org**, so nobody else can publish under the name.
+```bash
+git tag monitoring-v0.2.0 && git push origin monitoring-v0.2.0
+```
 
-Publishing publicly is a deliberate choice. The package is inert without an
-application id and signing key — an unauthenticated snapshot is rejected — and
-the ingest URL is configuration rather than something baked in. The HMAC is the
-protection; obscurity never was.
+A published version can never be replaced or deleted, only unlisted — hence a
+tag rather than every commit. The release is gated on the test suite that pins
+this package's signing implementation to the endpoint that verifies it.
 
-## Naming
+## Versioning
 
-The `WilliamBelle.*` prefix is the established pattern for packages published by
-William Belle LLC. This one is named for what it does rather than carrying a
-product brand — see the decision log in
-`docs/practice-platform/product-strategy.md`.
+Pre-1.0 while the reporting contract settles. Breaking changes before 1.0 will
+be released as a minor version bump and described in the release notes.
+
+## Support
+
+Issued application ids, signing keys, and questions about a monitored
+application: [willpickeral@williambelle.co](mailto:willpickeral@williambelle.co).
+
+Licensed MIT — read it, audit it, and verify it does what this page says.

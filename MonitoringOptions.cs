@@ -1,5 +1,10 @@
 namespace WilliamBelle.Monitoring;
 
+/// <summary>
+/// Where to report to, and as whom. The application id and signing key are
+/// issued by William Belle LLC; keep the key in configuration or a secret
+/// store, never in source.
+/// </summary>
 public class MonitoringOptions
 {
     /// <summary>Ingest endpoint, e.g. https://portal.williambelle.co/ingest/sensor.</summary>

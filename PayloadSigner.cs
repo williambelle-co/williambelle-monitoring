@@ -11,6 +11,10 @@ namespace WilliamBelle.Monitoring;
 /// </summary>
 public static class PayloadSigner
 {
+    /// <summary>Signs a payload with the application's key.</summary>
+    /// <param name="payload">The exact JSON that will be transmitted.</param>
+    /// <param name="key">The signing key issued for this application.</param>
+    /// <returns>A lowercase hexadecimal HMAC-SHA256 signature.</returns>
     public static string Sign(string payload, string key)
     {
         using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(key));

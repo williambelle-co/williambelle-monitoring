@@ -47,6 +47,19 @@ It signs that with HMAC-SHA256 and POSTs it. That is the complete data surface.
 Keeping those properties true is the point of this package. Anything that would
 give it an inbound channel or a dependency needs a very good reason.
 
+## Publishing
+
+Packed from this project (`dotnet pack -c Release`). Pre-1.0 on purpose — the
+ingest contract may still change.
+
+Before the first publish: **reserve the `WilliamBelle.*` ID prefix on
+nuget.org**, so nobody else can publish under the name.
+
+Publishing publicly is a deliberate choice. The package is inert without an
+application id and signing key — an unauthenticated snapshot is rejected — and
+the ingest URL is configuration rather than something baked in. The HMAC is the
+protection; obscurity never was.
+
 ## Naming
 
 The `WilliamBelle.*` prefix is the established pattern for packages published by

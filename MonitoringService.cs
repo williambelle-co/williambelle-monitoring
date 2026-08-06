@@ -13,12 +13,17 @@ namespace WilliamBelle.Monitoring;
 /// HMAC-signed, to the ingest endpoint. Failures are logged and
 /// swallowed — the sensor must never affect the host application.
 /// </summary>
-public sealed class SensorService(
+public sealed class MonitoringService(
     IOptions<MonitoringOptions> options,
     IHttpClientFactory httpClientFactory,
     IHostEnvironment environment,
-    ILogger<SensorService> logger) : BackgroundService
+    ILogger<MonitoringService> logger) : BackgroundService
 {
+    /// <summary>
+    /// Reports on the configured interval until the host shuts down. Failures
+    /// are logged and swallowed: monitoring must never take down the
+    /// application it is monitoring.
+    /// </summary>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var opts = options.Value;
@@ -53,7 +58,7 @@ public sealed class SensorService(
             snapshot.Packages.Count);
     }
 
-    internal static SensorSnapshot Collect(string appId, string environmentName) => new()
+    internal static MonitoringSnapshot Collect(string appId, string environmentName) => new()
     {
         AppId = appId,
         RuntimeVersion = RuntimeInformation.FrameworkDescription,
@@ -61,7 +66,7 @@ public sealed class SensorService(
         Packages = AppDomain.CurrentDomain.GetAssemblies()
             .Select(a => a.GetName())
             .Where(n => n.Name is not null)
-            .Select(n => new SensorSnapshot.PackageInfo
+            .Select(n => new MonitoringSnapshot.PackageInfo
             {
                 Name = n.Name!,
                 Version = n.Version?.ToString() ?? "unknown",

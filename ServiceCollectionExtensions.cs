@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace WilliamBelle.Monitoring;
 
+/// <summary>Registration for the monitoring agent.</summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
@@ -20,7 +21,7 @@ public static class ServiceCollectionExtensions
     {
         services.Configure(configure);
         services.AddHttpClient("bellwether-sensor");
-        services.AddHostedService<SensorService>();
+        services.AddHostedService<MonitoringService>();
         return services;
     }
 }

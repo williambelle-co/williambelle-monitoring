@@ -1,10 +1,42 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- Consumers see the XML docs, which carry the constraints that matter:
+         one-way, read-only, cannot break the host. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>WilliamBelle.Monitoring</PackageId>
+
+    <!-- Pre-1.0 on purpose: the ingest contract may still change. -->
+    <Version>0.1.0</Version>
+
+    <Authors>William Belle LLC</Authors>
+    <Company>William Belle LLC</Company>
+    <Description>Reports what only a running process can see — runtime version, environment name, and the package versions actually loaded — to a William Belle LLC monitoring endpoint. Read-only and one-way: it exposes no endpoint, accepts no commands, collects no logs or user data, and cannot fail the host application. Requires an application id and signing key issued by William Belle LLC.</Description>
+    <PackageTags>monitoring;diagnostics;aspnetcore;dependencies;drift</PackageTags>
+    <PackageProjectUrl>https://williambelle.co</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright © William Belle LLC</Copyright>
+
+    <!-- Reproducible output, so a published package can be checked against this
+         source. Worth more than usual for something installed into other
+         people's applications. -->
+    <Deterministic>true</Deterministic>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.10" />

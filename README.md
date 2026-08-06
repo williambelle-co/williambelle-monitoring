@@ -1,6 +1,6 @@
 # WilliamBelle.Monitoring
 
-[![CI](https://github.com/williambellellc/williambelle-monitoring/actions/workflows/ci.yml/badge.svg)](https://github.com/williambellellc/williambelle-monitoring/actions/workflows/ci.yml)
+[![CI](https://github.com/williambelle-co/williambelle-monitoring/actions/workflows/ci.yml/badge.svg)](https://github.com/williambelle-co/williambelle-monitoring/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/WilliamBelle.Monitoring.svg)](https://www.nuget.org/packages/WilliamBelle.Monitoring)
 
 An in-app monitoring agent for ASP.NET Core applications. It reports, on a

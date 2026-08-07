@@ -1,0 +1,4 @@
+# This package installs into other people's applications, so every change to
+# it gets one reviewer's eyes. Ownership is stated here rather than assumed,
+# so a pull request routes itself.
+* @wpickeral

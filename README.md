@@ -11,6 +11,11 @@ actually loaded.
 That last one matters most. A repository can say a vulnerable package was
 upgraded while production still runs the old version — this is what notices.
 
+Node applications are covered by
+[`@williambelle-co/monitoring`](https://www.npmjs.com/package/@williambelle-co/monitoring),
+which reports the same shape to the same endpoint — so a mixed estate lands in
+one place.
+
 ## Usage
 
 ```csharp

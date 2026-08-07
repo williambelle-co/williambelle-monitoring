@@ -9,6 +9,19 @@ on:
   push:
     tags: ['v*']
 
+  # A release path nobody has ever run is a release path nobody knows works.
+  # Dispatching with a version already on nuget.org rehearses the whole chain
+  # — test, pack, OIDC token exchange, push — and stops harmlessly at
+  # --skip-duplicate instead of spending a version number. Run this after
+  # anything that could disturb Trusted Publishing, a repository rename most
+  # of all, since the policy is bound to the repository's name.
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to pack and push. An already-published one rehearses without releasing.'
+        required: true
+        default: '0.1.0'
+
 permissions:
   contents: read
   # Required for Trusted Publishing: the workflow proves its identity to
@@ -33,11 +46,32 @@ jobs:
       - name: Test
         run: dotnet test -c Release
 
-      - name: Pack ${{ github.ref_name }}
+      # The tag carries the version on a real release; a dispatch says it
+      # outright. Read through an environment variable rather than interpolated
+      # into the script, so the input cannot become shell.
+      - name: Resolve version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            version="$INPUT_VERSION"
+          else
+            version="${GITHUB_REF_NAME#v}"
+          fi
+          # Without this, a dispatch would pack version "main" and only fail
+          # further down, somewhere less obvious.
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$'; then
+            echo "::error::'$version' is not a version number"
+            exit 1
+          fi
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+          echo "Packing $version"
+
+      - name: Pack ${{ steps.version.outputs.value }}
+        run: |
           dotnet pack src/WilliamBelle.Monitoring -c Release \
-            -p:Version="$version" -o artifacts
+            -p:Version="${{ steps.version.outputs.value }}" -o artifacts
 
       - uses: actions/upload-artifact@v4
         with:

@@ -54,22 +54,13 @@ dotnet test          # the signature scheme and what a snapshot contains
 dotnet pack src/WilliamBelle.Monitoring -c Release
 ```
 
+That suite pins this package's signing implementation to the endpoint that
+verifies it, and no release goes out without it passing.
+
 The published package is built by GitHub Actions from a tag, using
 [Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) —
 no long-lived API key exists for this package. Source Link is enabled, so a
 debugger can step straight from the published package into this source.
-
-## Releasing
-
-Tag it. `v0.2.0` builds, tests, packs, and publishes version 0.2.0:
-
-```bash
-git tag v0.2.0 && git push origin v0.2.0
-```
-
-A published version can never be replaced or deleted, only unlisted — hence a
-tag rather than every commit. The release is gated on the test suite that pins
-this package's signing implementation to the endpoint that verifies it.
 
 ## Versioning
 

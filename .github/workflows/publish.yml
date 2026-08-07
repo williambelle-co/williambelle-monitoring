@@ -82,7 +82,14 @@ jobs:
         uses: NuGet/login@v1
         id: login
         with:
-          user: WilliamBelle
+          # The person who created the trust policy, not the account that owns
+          # the package. Those differ here: the policy names WilliamBelle as
+          # package owner, but a policy belongs to whoever added it. Getting
+          # this wrong answers HTTP 401 with "no matching trust policy", which
+          # reads like the policy is missing rather than misaddressed.
+          # Deliberately not a secret — it is public on nuget.org, and hiding
+          # it would hide the one value worth seeing when this fails.
+          user: willpickeral
 
       - name: Push
         run: |

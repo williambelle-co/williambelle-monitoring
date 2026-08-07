@@ -24,7 +24,7 @@
     <PackageProjectUrl>https://williambelle.co</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/williambelle-co/williambelle-monitoring</RepositoryUrl>
+    <RepositoryUrl>https://github.com/williambelle-co/williambelle-monitoring-dotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Copyright>Copyright © William Belle LLC</Copyright>
